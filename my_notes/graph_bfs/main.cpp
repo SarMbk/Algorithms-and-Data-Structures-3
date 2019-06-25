@@ -41,6 +41,7 @@ void create_graph(vector<vector<int> > &adj){
 
 
 // This function performs a graph bfs. Heavily commented for me to understand/ learn well
+// Time complexity: O(|V| + |E|); Space complexity: O(|V|)
 void bfs(vector<vector<int> > &adj){
     size_t n = adj.size();
 
@@ -52,7 +53,9 @@ void bfs(vector<vector<int> > &adj){
     q.push(0);
     visited[0] = true;
 
-    // 2. While there is stuff in the queue: 2a.p is the top node in the queue; dequeue and print node p; 2b. enqueue all vertices adjacent to p.
+    // 2. While there is stuff in the queue:
+    // 2a.p is the top node in the queue; dequeue and print node p;
+    // 2b. enqueue all vertices adjacent to p.
     while(!q.empty()){
         int p = q.front();
         q.pop();
