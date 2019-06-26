@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <stack>
 using namespace std;
 
 
@@ -40,7 +41,7 @@ void create_graph(vector<vector<int> > &adj){
 }
 
 
-// This function performs a graph bfs. Heavily commented for me to understand/ learn well
+// This function performs a graph bfs.
 // Time complexity: O(|V| + |E|); Space complexity: O(|V|)
 void bfs(vector<vector<int> > &adj){
     size_t n = adj.size();
@@ -54,7 +55,7 @@ void bfs(vector<vector<int> > &adj){
     visited[0] = true;
 
     // 2. While there is stuff in the queue:
-    // 2a.p is the top node in the queue; dequeue and print node p;
+    // 2a.p is the front node in the queue; dequeue and print node p;
     // 2b. enqueue all vertices adjacent to p.
     while(!q.empty()){
         int p = q.front();
@@ -63,9 +64,45 @@ void bfs(vector<vector<int> > &adj){
         for (int i=0; i<adj[p].size(); i++){
             if (!visited[adj[p][i]]){
                 q.push(adj[p][i]);
-                visited[adj[p][i]]=true;
+                visited[adj[p][i]] = true;
             }
         }
+    }
+    cout << endl;
+}
+
+
+// This function performs a graph dfs.
+// Time complexity: O(|V| + |E|); Space complexity: O(|V|)
+void dfs(vector<vector<int> > &adj){
+    size_t n = adj.size();
+
+    // Auxilary stack and vector to keep track of visited nodes
+    stack<int> s;
+    vector<bool> visited (n, false);
+
+    // 1. Push starting node into a stack, mark it as visited and print it
+    s.push(0);
+    visited[0] = true;
+    cout << 0 << " ";
+
+    // 2. While there is stuff in the stack
+    // 2a. p is the top node of the stack
+    // 2b. push only one vertex adjacent to p into the stack, mark it as visited and print it
+    // 2c. if p has no unvisited adjacent vertices, then pop top element from the stack
+    while (!s.empty()){
+        int p = s.top();
+        bool hasValAdjVertex = false;
+        for (int i=0; i<adj[p].size(); i++){
+            if (!visited[adj[p][i]]){
+                s.push(adj[p][i]);
+                visited[adj[p][i]] = true;
+                cout << adj[p][i] << " ";
+                hasValAdjVertex = true;
+                break;
+            }
+        }
+        if (!hasValAdjVertex) s.pop();
     }
     cout << endl;
 }
@@ -83,4 +120,7 @@ int main() {
 
     // Perform a bfs
     bfs(adj);
+
+    // Perform a dfs
+    dfs(adj);
 }
