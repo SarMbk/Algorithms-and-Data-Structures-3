@@ -4,60 +4,91 @@
 using namespace std;
 
 
-// These are the values with which we populate the flag vector
-const int UNVISITED = -1;
-const int VISITED = 0;
-const int VISITED_POPPED = 1;
+// These are the values with which we populate the colors vector
+const int WHITE = -1;   // white = unvisited
+const int GRAY = 0;     // gray = visited (in stack) but not finished
+const int BLACK = 1;    // black = visited and finished (popped from stack)
+
+
+bool hasCycleUtil2(vector<vector<int> > &adj, int u, vector<int> &colors){
+    colors[u] = GRAY;
+    for (int i=0; i<adj[u].size(); i++){
+        int v = adj[u][i];
+        if (colors[v] == GRAY)
+            return true;
+        if (colors[v] == WHITE && hasCycleUtil2(adj, v, colors))
+            return true;
+    }
+    colors[u] = BLACK;
+    return false;
+}
+
+bool hasCycle2(vector<vector<int> > &adj){
+    int n = adj.size();
+    vector<int> colors(n, WHITE);
+
+    for (int i=0; i<n; i++){
+        if (colors[i] == WHITE)
+            if (hasCycleUtil2(adj, i, colors) == true)
+                return true;
+    }
+
+    return false;
+}
 
 
 
-int hasCycle(vector<vector<int> > &adj){
+
+
+
+
+
+bool hasCycle(vector<vector<int> > &adj){
     int n = adj.size();
 
     // Visited set
-    vector<bool> visitedNodes(n, false);
+    vector<bool> visited(n, false);
 
-    // flag[v] = -1 if the node is unvisited; 0 if visited; 1 if visited and popped
-    vector<int> flag(n, UNVISITED);
+    // color[v] = WHITE if the node is unvisited;
+    // GRAY if visited;
+    // BLACK if visited and popped
+    vector<int> color(n, WHITE);
 
     // Auxilary stack
     stack<int> s;
 
     s.push(0);
-    visitedNodes[0] = true;
-    flag[0] = VISITED;
+    visited[0] = true;
+    color[0] = GRAY;
     //cout << 0 << " ";
 
     while(!s.empty()){
         int p = s.top();
 
-        // Check any adjacent nodes with flag[i] = VISITED; if yes then we have a cycle
-        for (int i=0; i<adj[p].size(); i++){
-            if (flag[adj[p][i]] == VISITED)
-                return 1;
+        if (visited[p]){
+            color[p] = BLACK;
+            s.pop();
         }
 
-        // Find an unvisited node an push into the stack
-        bool hasAdjVertex = false;
+
         for (int i=0; i<adj[p].size(); i++){
-            if (!visitedNodes[adj[p][i]]){
+            if (!visited[adj[p][i]]){
                 s.push(adj[p][i]);
-                visitedNodes[adj[p][i]] = true;
-                flag[adj[p][i]] = VISITED;
-                hasAdjVertex = true;
-                //cout << adj[p][i] << " ";
+                visited[adj[p][i]] = true;
+                color[adj[p][i]] = GRAY;
                 break;
             }
-        }
-
-        if (!hasAdjVertex){
-            flag[p] = VISITED_POPPED;
-            s.pop();
+            else if (color[adj[p][i]] == GRAY){
+                return true;
+            }
         }
     }
     //cout << endl;
-    return 0;
+    return false;
 }
+
+
+
 
 
 
@@ -70,5 +101,5 @@ int main() {
     std::cin >> x >> y;
     adj[x - 1].push_back(y - 1);
   }
-  std::cout << hasCycle(adj);
+  std::cout << hasCycle2(adj);
 }
