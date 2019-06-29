@@ -8,48 +8,60 @@ using namespace std;
 using std::vector;
 using std::pair;
 
-int acyclic(vector<vector<int> > &adj) {
-  //write your code here
-  return 0;
-}
+
+// These are the values with which we populate the flag vector
+const int UNVISITED = -1;
+const int VISITED = 0;
+const int VISITED_POPPED = 1;
 
 
-
+// Needs improvement. Currently runs in O(|V|*|E|). We need O(|V|+|E|)
 int hasCycle(vector<vector<int> > &adj){
-    size_t n = adj.size();
+    int n = adj.size();
 
-    // Auxilary stack and vector to keep track of visited nodes
+    // Visited set
+    vector<bool> visitedNodes(n, false);
+
+    // flag[v] = -1 if the node is unvisited; 0 if visited; 1 if visited and popped
+    vector<int> flag(n, UNVISITED);
+
+    // Auxilary stack
     stack<int> s;
-    vector<bool> visited (n, false);
-    unordered_map <int,int> m;
-    for (int i=0; i<n; i++)
-        m.emplace(i,0);
 
     s.push(0);
-    visited[0] = true;
+    visitedNodes[0] = true;
+    flag[0] = VISITED;
     cout << 0 << " ";
 
-
-    while (!s.empty()){
+    while(!s.empty()){
         int p = s.top();
-        m[p]++;
-        if (m[p]>1) return 1;
-        bool hasValAdjVertex = false;
+
+        // Check any adjacent nodes with flag[i] = VISITED
         for (int i=0; i<adj[p].size(); i++){
-            if (!visited[adj[p][i]]){
+            if (flag[adj[p][i]] == VISITED)
+                return 1;
+        }
+
+        bool hasAdjVertex = false;
+        for (int i=0; i<adj[p].size(); i++){
+            if (!visitedNodes[adj[p][i]]){
                 s.push(adj[p][i]);
-                visited[adj[p][i]] = true;
+                visitedNodes[adj[p][i]] = true;
+                flag[adj[p][i]] = VISITED;
+                hasAdjVertex = true;
                 cout << adj[p][i] << " ";
-                hasValAdjVertex = true;
                 break;
             }
         }
-        if (!hasValAdjVertex) s.pop();
+
+        if (!hasAdjVertex){
+            flag[p] = VISITED_POPPED;
+            s.pop();
+        }
     }
     cout << endl;
     return 0;
 }
-
 
 
 
