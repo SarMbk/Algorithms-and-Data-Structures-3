@@ -10,6 +10,8 @@ const int GRAY = 0;     // gray = visited (in stack) but not finished
 const int BLACK = 1;    // black = visited and finished (popped from stack)
 
 
+// Utility function for hasCycle.
+// int u = starting vertex
 bool hasCycleUtil(vector<vector<int> > &adj, int u, vector<int> &colors){
     colors[u] = GRAY;
     for (int i=0; i<adj[u].size(); i++){
@@ -39,13 +41,13 @@ bool hasCycle(vector<vector<int> > &adj){
 
 
 int main() {
-  size_t n, m;
-  std::cin >> n >> m;
-  vector<vector<int> > adj(n, vector<int>());
-  for (size_t i = 0; i < m; i++) {
-    int x, y;
-    std::cin >> x >> y;
-    adj[x - 1].push_back(y - 1);
-  }
-  std::cout << hasCycle(adj);
+    size_t n, m;
+    std::cin >> n >> m;
+    vector<vector<int> > adj(n, vector<int>());
+    for (size_t i = 0; i < m; i++) {
+        int x, y;
+        std::cin >> x >> y;
+        adj[x - 1].push_back(y - 1);
+    }
+    std::cout << hasCycle(adj);
 }
