@@ -15,7 +15,7 @@ const int BLACK = 1;    // black = visited and finished (popped from stack)
 // Note that it has attributes that are not necessary for this assignment
 // e.g. postOrder, preOrder, time.
 // This algorithm is included here just for my own reference. Not used for the solution
-void dfs_visit(vector<vector<int> > &adj, vector<int> &preOrder, vector<int> &postOrder, vector<int> &colors,  int &time, int u) {
+void dfs_util(vector<vector<int> > &adj, vector<int> &preOrder, vector<int> &postOrder, vector<int> &colors,  int &time, int u) {
     time++;
     preOrder[u] = time;
     colors[u] = GRAY;
@@ -23,7 +23,7 @@ void dfs_visit(vector<vector<int> > &adj, vector<int> &preOrder, vector<int> &po
     for (int i = 0; i<adj[u].size(); i++){
         int v = adj[u][i];
         if (colors[v] == WHITE)
-            dfs_visit(adj, preOrder, postOrder, colors, time, v);
+            dfs_util(adj, preOrder, postOrder, colors, time, v);
     }
     colors[u] = BLACK;
     time++;
@@ -38,7 +38,7 @@ void dfs(vector<vector<int> > &adj){
     int time = 0;
     for (int i=0; i<n; i++){
         if (colors[i]==WHITE)
-            dfs_visit(adj, preOrder, postOrder, colors, time, i);
+            dfs_util(adj, preOrder, postOrder, colors, time, i);
     }
 }
 
