@@ -95,7 +95,7 @@ int main() {
     std::cin >> n;
     vector<int> x(n), y(n);
     for (size_t i = 0; i < n; i++) {
-    std::cin >> x[i] >> y[i];
+        std::cin >> x[i] >> y[i];
     }
     std::cout << std::setprecision(10) << minimum_distance(x, y) << std::endl;
 }
